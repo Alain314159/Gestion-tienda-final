@@ -1,16 +1,1406 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f172a" />
-    <title>Tienda Pro</title>
-    <link rel="manifest" href="./manifest.webmanifest" />
-    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/src/styles.css" />
-  </head>
-  <body>
-    <div id="app">Cargando...</div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#2196F3">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tienda Pro">
+<title>Tienda Pro</title>
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+
+<style>
+[v-cloak]{display:none!important}
+:root{--pri:#2196F3;--pri-d:#1976D2;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--purple:#7c3aed;
+--bg:#f3f4f6;--card:#fff;--txt:#111827;--mut:#6b7280;--brd:#e5e7eb;--r:1.25rem;--r-sm:.85rem;--sh:0 2px 10px rgba(0,0,0,.06)}
+[data-theme="dark"]{--bg:#0f172a;--card:#1e293b;--txt:#f1f5f9;--mut:#94a3b8;--brd:#334155;--sh:0 2px 12px rgba(0,0,0,.4)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--txt)}
+input,textarea,select,[contenteditable]{-webkit-user-select:text!important;user-select:text!important;-webkit-touch-callout:default!important}
+button,.item,.drop-item,.quick-btn,.sheet-btn,.inv-head,.nav button,.h-btn,.icon-btn,.del-btn,.link-btn{touch-action:manipulation}
+.ic{vertical-align:middle;display:inline-block;object-fit:contain;flex-shrink:0}
+.header{position:sticky;top:0;z-index:50;margin:0 .6rem;background:var(--pri);color:#fff;border-radius:0 0 var(--r) var(--r);padding:.85rem 1rem;display:flex;justify-content:space-between;align-items:center;box-shadow:0 4px 14px rgba(33,150,243,.35)}
+.header h1{font-size:1.1rem;font-weight:800;display:flex;align-items:center;gap:.4rem}
+.header .hacts{display:flex;gap:.3rem}
+.h-btn{background:none;border:none;color:#fff;cursor:pointer;padding:.35rem .55rem;display:flex;align-items:center;gap:.3rem;border-radius:.5rem;font-size:.72rem;font-weight:700}
+.h-btn:active{background:rgba(255,255,255,.2)}
+main{padding:.8rem .8rem 6rem;max-width:42rem;margin:0 auto}
+.card{background:var(--card);border-radius:var(--r);padding:1.1rem;box-shadow:var(--sh);margin-bottom:.8rem}
+.card-title{font-weight:800;color:var(--pri);display:flex;align-items:center;gap:.4rem;margin-bottom:.8rem;font-size:1.05rem}
+.balance{color:#fff;border-radius:var(--r);padding:1.4rem;text-align:center;margin-bottom:.8rem;box-shadow:var(--sh)}
+.balance.azul{background:linear-gradient(135deg,#2196F3,#1e3a8a)}
+.balance.verde{background:linear-gradient(135deg,#22c55e,#15803d)}
+.balance.morado{background:linear-gradient(135deg,#a855f7,#5b21b6)}
+.balance.neg{background:linear-gradient(135deg,#ef4444,#7f1d1d)}
+.balance .lbl{font-size:.72rem;opacity:.9;display:flex;align-items:center;justify-content:center;gap:.3rem}
+.balance .val{font-size:1.9rem;font-weight:800;margin:.2rem 0}
+.balance .sub{font-size:.72rem;opacity:.85}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.stat{background:var(--card);border-radius:var(--r);padding:.9rem .6rem;text-align:center;box-shadow:var(--sh)}
+.stat .lbl{font-size:.66rem;color:var(--mut);display:flex;align-items:center;justify-content:center;gap:.25rem}
+.stat .val{font-size:1.2rem;font-weight:800;margin-top:.25rem}
+.badge{display:inline-block;padding:.15rem .55rem;border-radius:99px;font-size:.6rem;font-weight:800;color:#fff;flex-shrink:0}
+.badge.ok{background:var(--ok)}.badge.low{background:var(--warn)}.badge.out{background:var(--bad)}.badge.arch{background:var(--mut)}
+input,select,textarea{width:100%;padding:.75rem .9rem;border:1px solid var(--brd);border-radius:var(--r-sm);background:var(--card);color:var(--txt);font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s;margin-bottom:.5rem}
+input:focus,select:focus{border-color:var(--pri);box-shadow:0 0 0 3px rgba(33,150,243,.15)}
+.btn{display:block;width:100%;padding:.8rem;border:none;border-radius:var(--r-sm);font-size:.92rem;font-weight:800;cursor:pointer;transition:transform .1s;text-align:center;margin-bottom:.5rem}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.5;pointer-events:none}
+.btn.pri{background:var(--pri);color:#fff}.btn.ok{background:var(--ok);color:#fff}.btn.bad{background:var(--bad);color:#fff}.btn.warn{background:var(--warn);color:#fff}.btn.ghost{background:transparent;border:1.5px solid var(--brd);color:var(--txt)}
+.item{display:flex;justify-content:space-between;align-items:center;gap:.5rem;padding:.7rem 0;border-bottom:1px solid var(--brd)}
+.item:last-child{border-bottom:none}
+.item .info{min-width:0;flex:1}.item .nm{font-weight:700;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.item .det{font-size:.72rem;color:var(--mut);overflow-wrap:anywhere}
+.nav{position:fixed;left:.6rem;right:.6rem;bottom:.6rem;z-index:50;background:var(--card);border-radius:var(--r);box-shadow:0 -2px 16px rgba(0,0,0,.12);display:flex;padding:.35rem;padding-bottom:calc(.35rem + env(safe-area-inset-bottom))}
+.nav button{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;cursor:pointer;color:var(--mut);padding:.5rem .2rem;border-radius:.8rem;font-weight:700;transition:all .2s;min-width:0}
+.nav button.activo{color:var(--pri);background:rgba(33,150,243,.12)}
+.nav button span{display:block;font-size:.68rem;line-height:1.15;color:inherit;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;font-weight:700}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:90}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:95;background:var(--card);border-radius:var(--r) var(--r) 0 0;padding:1rem;padding-bottom:calc(1rem + env(safe-area-inset-bottom));box-shadow:0 -4px 20px rgba(0,0,0,.2);animation:slideUp .25s ease}
+.sheet .handle{width:40px;height:4px;background:var(--brd);border-radius:99px;margin:0 auto .8rem}
+.sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.sheet-btn{display:flex;align-items:center;gap:.6rem;background:var(--bg);border:none;border-radius:var(--r-sm);padding:.9rem;cursor:pointer;color:var(--txt);font-weight:700;font-size:.9rem}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem}
+.modal-box{background:var(--card);border-radius:var(--r);padding:1.2rem;width:100%;max-width:400px;max-height:85vh;overflow-y:auto;box-shadow:0 10px 40px rgba(0,0,0,.3);animation:pop .2s ease}
+.modal-title{font-weight:800;color:var(--pri);margin-bottom:.9rem;display:flex;align-items:center;gap:.4rem;font-size:1.1rem}
+.search{position:relative;margin-bottom:.5rem}
+.search input{margin-bottom:0}
+.drop-static{border:1px solid var(--brd);border-radius:var(--r-sm);background:var(--card);max-height:16rem;overflow-y:auto;margin-bottom:.6rem;box-shadow:var(--sh)}
+.drop-head{display:flex;justify-content:space-between;align-items:center;padding:.5rem .8rem;font-size:.72rem;font-weight:800;color:var(--mut);border-bottom:1px solid var(--brd);position:sticky;top:0;background:var(--card)}
+.drop-head button{background:none;border:none;color:var(--bad);font-weight:800;cursor:pointer;font-size:1.1rem;padding:0 .3rem;line-height:1}
+.drop-item{padding:.7rem .9rem;display:flex;justify-content:space-between;gap:.5rem;cursor:pointer;border-bottom:1px solid var(--brd);font-size:.85rem}
+.drop-item:last-child{border-bottom:none}.drop-item:active{background:var(--bg)}
+.toast{position:fixed;bottom:5.5rem;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:.6rem 1rem;border-radius:99px;font-size:.82rem;font-weight:700;z-index:200;box-shadow:0 4px 14px rgba(0,0,0,.3);display:flex;align-items:center;gap:.6rem;max-width:90%;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1;pointer-events:auto}
+.toast.ok{background:var(--ok)}.toast.bad{background:var(--bad)}.toast.warn{background:var(--warn)}
+.toast button{background:none;border:none;color:#fde68a;font-weight:800;text-decoration:underline;cursor:pointer;font-size:.82rem}
+.banner{position:fixed;top:0;left:0;right:0;z-index:120;text-align:center;font-size:.75rem;font-weight:700;padding:.35rem;color:#fff}
+.banner.off{background:var(--bad)}.banner.upd{background:var(--pri);cursor:pointer}
+.row{display:flex;justify-content:space-between;gap:.5rem;padding:.45rem 0;border-bottom:1px solid var(--brd);font-size:.85rem}
+.row:last-child{border-bottom:none}
+.row span:first-child{min-width:0}
+.row.total{font-weight:800;font-size:1rem;border-top:2px solid var(--txt);border-bottom:none;margin-top:.3rem;padding-top:.6rem}
+.row.hl{background:rgba(22,163,74,.1);border-radius:.5rem;padding:.6rem;margin-top:.4rem;border-bottom:none}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+.empty{text-align:center;color:var(--mut);padding:1.5rem;font-size:.85rem}
+.chart-wrap{position:relative;height:200px}
+.cart-item{background:var(--bg);border-radius:var(--r-sm);padding:.7rem;margin-bottom:.5rem}
+.cart-top{display:flex;justify-content:space-between;align-items:flex-start;gap:.4rem}
+.cart-item .nm{font-weight:700;font-size:.88rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
+.del-btn{background:var(--bad);color:#fff;border:none;width:1.8rem;height:1.8rem;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.qty-row{display:flex;align-items:center;gap:.3rem;flex-wrap:wrap;margin-top:.4rem}
+.qty-row label{font-size:.7rem;color:var(--mut);width:2.5rem}
+.qty-input{display:flex;align-items:center;gap:0;background:var(--card);border:1px solid var(--brd);border-radius:.5rem;overflow:hidden}
+.qty-input button{background:var(--bg);border:none;width:2rem;height:2rem;font-size:1.2rem;font-weight:800;color:var(--pri);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.qty-input input{width:4rem;text-align:center;border:none;border-radius:0;padding:.4rem 0;margin:0;font-size:.9rem;background:transparent}
+.price-input{width:5.5rem;text-align:center;padding:.4rem;margin:0}
+.total-box{background:rgba(22,163,74,.1);border:1.5px solid var(--ok);border-radius:var(--r-sm);padding:.7rem;display:flex;justify-content:space-between;font-weight:800;color:var(--ok);margin:.6rem 0}
+.alert-box{background:rgba(217,119,6,.12);border-left:4px solid var(--warn);border-radius:var(--r-sm);padding:.7rem .9rem;font-size:.82rem;font-weight:700;color:var(--warn);display:flex;align-items:center;gap:.4rem;cursor:pointer;margin-bottom:.8rem}
+.info-box{background:rgba(33,150,243,.1);border-left:4px solid var(--pri);border-radius:var(--r-sm);padding:.6rem .8rem;font-size:.75rem;color:var(--pri);margin-bottom:.7rem}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:.6rem}
+.quick-btn{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r-sm);padding:.8rem;display:flex;flex-direction:column;align-items:center;gap:.3rem;cursor:pointer;font-weight:700;font-size:.78rem;color:var(--txt)}
+.inv-group{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);margin-bottom:.6rem;overflow:hidden}
+.inv-head{display:flex;justify-content:space-between;align-items:center;padding:.9rem 1rem;cursor:pointer;gap:.5rem}
+.inv-head .nm{font-weight:800;color:var(--pri)}
+.inv-lotes{background:var(--bg);padding:.6rem .8rem}
+.inv-lote{display:flex;justify-content:space-between;font-size:.72rem;padding:.35rem .5rem;background:var(--card);border-radius:.5rem;margin-bottom:.3rem;gap:.4rem}
+.act-btns{display:flex;gap:.3rem;align-items:center;flex-shrink:0}
+.icon-btn{background:var(--bg);border:none;width:2rem;height:2rem;border-radius:.6rem;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.icon-btn.bad{background:rgba(220,38,38,.12)}.icon-btn.ok{background:rgba(22,163,74,.12)}
+.switch{position:relative;display:inline-block;width:42px;height:24px;flex-shrink:0}
+.switch input{opacity:0;width:0;height:0;margin:0}
+.slider{position:absolute;inset:0;background:var(--brd);border-radius:99px;transition:.2s;cursor:pointer}
+.slider:before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+.slider{background:var(--pri)}
+.switch input:checked+.slider:before{transform:translateX(18px)}
+.set-row{display:flex;justify-content:space-between;align-items:center;padding:.5rem 0;gap:.5rem}
+.set-row .lbl{font-size:.88rem;display:flex;align-items:center;gap:.4rem}
+.set-group{font-weight:800;font-size:.8rem;color:var(--mut);text-transform:uppercase;margin:.8rem 0 .3rem;letter-spacing:.03em}
+.link-btn{background:none;border:none;color:var(--bad);font-size:.72rem;text-decoration:underline;cursor:pointer;padding:.2rem}
+.arqueo-prev{border-radius:var(--r-sm);padding:.7rem .8rem;font-size:.78rem;margin-bottom:.7rem;font-weight:700}
+.arqueo-prev.cuadre{background:rgba(22,163,74,.12);color:var(--ok)}
+.arqueo-prev.sobrante{background:rgba(217,119,6,.12);color:var(--warn)}
+.arqueo-prev.faltante{background:rgba(220,38,38,.12);color:var(--bad)}
+.item.anulada{opacity:.5}
+.item.anulada .nm{text-decoration:line-through}
+.prod-lotes{background:var(--bg);padding:.4rem .8rem .6rem;border-radius:0 0 var(--r-sm) var(--r-sm);margin-top:-1px;margin-bottom:.5rem}
+.prod-wrap{margin-bottom:.3rem}
+.stock-line{display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;margin-top:.15rem}
+.stock-num{font-weight:800;font-size:.82rem;color:var(--pri)}
+.chev{transition:transform .2s;display:inline-flex}
+.chev.open{transform:rotate(180deg)}
+.cobro-modal{font-size:1.2rem;font-weight:800;text-align:center;margin:.5rem 0}
+.cobro-vuelto{font-size:2rem;font-weight:800;color:var(--ok);text-align:center;margin:.5rem 0;padding:1rem;background:rgba(22,163,74,.1);border-radius:var(--r-sm)}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+@keyframes pop{from{transform:scale(.95);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp .2s ease}
+@media print{.no-print{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+
+<div id="app" v-cloak :data-theme="cfg.tema">
+  <div v-if="!online" class="banner off no-print">Sin conexión — los datos se guardan localmente</div>
+  <div v-if="hayUpdate" class="banner upd no-print" @click="aplicarUpdate">Nueva versión disponible — tocar para actualizar</div>
+
+  <header class="header no-print">
+    <h1><icon name="store" :size="20" color="#fff"></icon> {{cfg.nombre||'Tienda Pro'}}</h1>
+    <div class="hacts">
+      <button class="h-btn" @click="toggleTema()" aria-label="Cambiar tema">
+        <icon :name="cfg.tema==='dark'?'sun':'moon'" :size="18" color="#fff"></icon>
+        <span>{{cfg.tema==='dark'?'Claro':'Oscuro'}}</span>
+      </button>
+      <button class="h-btn" @click="ajustesAbierto=true" aria-label="Ajustes">
+        <icon name="settings" :size="18" color="#fff"></icon>
+        <span>Ajustes</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- DASHBOARD -->
+    <section v-show="sec==='dashboard'" class="fade-up">
+      <div class="balance azul">
+        <div class="lbl"><icon name="wallet" :size="14" color="#fff"></icon> Efectivo en Caja</div>
+        <div class="val">{{fmt(saldoCaja)}}</div>
+        <div class="sub">Inventario: {{fmt(valorInventario)}} · Desde {{fmtFecha(cfg.periodoInicio)}}</div>
+      </div>
+      <div v-if="productosBajoStock.length||productosAgotados.length" class="alert-box" @click="ir('inventario')">
+        <icon name="alert" :size="16" color="#d97706"></icon> {{productosAgotados.length}} agotado(s) · {{productosBajoStock.length}} bajo(s)
+      </div>
+      <div class="grid2">
+        <div class="stat"><div class="lbl"><icon name="trend" :size="13" :color="mutColor"></icon> Ventas</div><div class="val" style="color:var(--pri)">{{fmt(ventasPeriodo)}}</div></div>
+        <div class="stat"><div class="lbl"><icon name="dollar" :size="13" :color="mutColor"></icon> Ganancia</div><div class="val pos">{{fmt(gananciaNetaPeriodo)}}</div></div>
+        <div class="stat"><div class="lbl"><icon name="bag" :size="13" :color="mutColor"></icon> Compras</div><div class="val neg">{{fmt(comprasPeriodo)}}</div></div>
+        <div class="stat"><div class="lbl"><icon name="chart" :size="13" :color="mutColor"></icon> Margen</div><div class="val" style="color:var(--pri)">{{margenPeriodo}}%</div></div>
+      </div>
+      <div class="card" style="margin-top:.8rem">
+        <div class="card-title"><icon name="chart" :size="18"></icon> Ventas vs Ganancia (6 meses)</div>
+        <div class="chart-wrap"><canvas id="chartVentas"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><icon name="diamond" :size="18"></icon> Top rentables del mes</div>
+        <div v-if="topRentables.length===0" class="empty">Sin ventas este mes</div>
+        <div v-for="(p,i) in topRentables" :key="p.id" class="row"><span>{{i+1}}. {{p.nombre}}</span><span class="pos">{{fmt(p.gan)}}</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Accesos rápidos</div>
+        <div class="quick-grid">
+          <button class="quick-btn" @click="ir('ventas')"><icon name="cart" :size="22"></icon>Nueva Venta</button>
+          <button class="quick-btn" @click="ir('compras')"><icon name="bag" :size="22"></icon>Registrar Compra</button>
+          <button class="quick-btn" @click="ir('caja')"><icon name="wallet" :size="22"></icon>Arqueo de Caja</button>
+          <button class="quick-btn" @click="ir('inventario')"><icon name="package" :size="22"></icon>Ver Inventario</button>
+        </div>
+      </div>
+      <div class="card"><div class="det" style="font-size:.78rem;color:var(--mut)">Última actividad: <b style="color:var(--txt)">{{ultimaActividad}}</b></div></div>
+    </section>
+
+    <!-- VENTAS -->
+    <section v-show="sec==='ventas'" class="fade-up">
+      <div class="card">
+        <div class="card-title"><icon name="cart" :size="18"></icon> Nueva Venta</div>
+        <div class="search">
+          <input v-model="busqVenta" type="text" placeholder="Buscar producto por nombre o código..." autocomplete="off" @focus="focusVenta=true" @click="focusVenta=true" @keyup.enter="agregarPrimero">
+        </div>
+        <div v-if="focusVenta" class="drop-static">
+          <div class="drop-head"><span>{{listaVenta.length}} resultado(s)</span><button @click="focusVenta=false;busqVenta=''" aria-label="Cerrar">×</button></div>
+          <div v-if="listaVenta.length===0" class="empty">Sin coincidencias (o sin stock)</div>
+          <div v-for="p in listaVenta" :key="p.id" class="drop-item" @click="agregarCarrito(p)">
+            <span>{{p.nombre}}</span><span style="color:var(--mut);white-space:nowrap">Stock {{fmtCant(stock(p.id))}} {{p.unidad||''}} · {{fmt(p.precio)}}</span>
+          </div>
+        </div>
+        <div v-if="carrito.length" style="margin-top:.2rem">
+          <div v-for="(it,i) in carrito" :key="i" class="cart-item">
+            <div class="cart-top">
+              <div class="nm">{{it.nombre}}</div>
+              <button class="del-btn" @click="carrito.splice(i,1)" aria-label="Quitar"><icon name="x" :size="14" color="#fff"></icon></button>
+            </div>
+            <div class="qty-row">
+              <label>Cant</label>
+              <div class="qty-input">
+                <button @click="cambiarCant(it, -1)">−</button>
+                <input v-model="it.cant" type="text" inputmode="decimal" @blur="validarCant(it)">
+                <button @click="cambiarCant(it, 1)">+</button>
+              </div>
+              <label>Precio</label>
+              <input class="price-input" v-model="it.precio" type="text" inputmode="decimal" @blur="validarPrecio(it)">
+            </div>
+            <div class="det" style="font-size:.72rem;color:var(--mut);margin-top:.3rem">{{fmt(it.precio)}} × {{fmtCant(it.cant)}} {{it.unidad||''}} = <b style="color:var(--pri)">{{fmt(subTotalItem(it))}}</b></div>
+          </div>
+          <div class="total-box"><span>TOTAL {{fmt(totalCarrito)}}</span><span>Gan. {{fmt(gananciaCarrito)}}</span></div>
+          <button class="btn ok" @click="iniciarCobro()" :disabled="procesandoVenta"><icon name="check" :size="16" color="#fff"></icon> {{procesandoVenta?'Procesando...':'Cobrar Venta'}}</button>
+          <button class="btn ghost" @click="carrito=[]"><icon name="trash" :size="14" :color="mutColor"></icon> Limpiar carrito</button>
+        </div>
+        <div v-if="!carrito.length&&!focusVenta" class="empty">Toca el buscador y agrega productos al carrito</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Historial de Ventas</div>
+        <div class="search"><input v-model="busqHist" type="text" placeholder="Buscar en historial..."></div>
+        <div v-if="ventasFiltradas.length===0" class="empty">Sin ventas</div>
+        <div v-for="v in ventasFiltradas" :key="v.id" class="item" :class="{anulada:v.anulada}">
+          <div class="info">
+            <div class="nm">{{v.items.map(x=>x.nombre+' ×'+fmtCant(x.cantidad)+(x.unidad?(' '+x.unidad):'')).join(', ')}}</div>
+            <div class="det">{{fmtFH(v.fecha)}} · <b style="color:var(--pri)">{{fmt(v.total)}}</b> · <span class="pos">+{{fmt(v.ganancia)}}</span></div>
+          </div>
+          <button v-if="!v.anulada" class="link-btn" @click="anularVenta(v.id)">Anular</button>
+          <span v-else class="badge arch">ANULADA</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- COMPRAS -->
+    <section v-show="sec==='compras'" class="fade-up">
+      <div class="card">
+        <div class="card-title"><icon name="bag" :size="18"></icon> Registrar Compra</div>
+        <div v-if="!compraForm.productoId">
+          <div class="search">
+            <input v-model="busqCompra" type="text" placeholder="Buscar producto..." autocomplete="off" @focus="focusCompra=true" @click="focusCompra=true">
+          </div>
+          <div v-if="focusCompra" class="drop-static">
+            <div class="drop-head"><span>{{listaCompra.length}} resultado(s)</span><button @click="focusCompra=false;busqCompra=''" aria-label="Cerrar">×</button></div>
+            <div v-if="listaCompra.length===0" class="empty">Sin coincidencias</div>
+            <div v-for="p in listaCompra" :key="p.id" class="drop-item" @click="selCompra(p)"><span>{{p.nombre}}</span><span style="color:var(--mut)">Stock {{fmtCant(stock(p.id))}} {{p.unidad||''}}</span></div>
+          </div>
+        </div>
+        <div v-if="compraForm.productoId">
+          <div class="row" style="border:none;padding:.2rem 0"><span>Producto</span><b>{{compraForm.nombre}}</b></div>
+          <div class="grid2">
+            <input v-model="compraForm.cantidad" type="number" inputmode="decimal" step="0.001" placeholder="Cantidad">
+            <input v-model="compraForm.costo" type="number" inputmode="decimal" step="0.01" placeholder="Costo unit.">
+          </div>
+          <div v-if="n(compraForm.cantidad)>0 && n(compraForm.costo)>=0" class="det neg" style="font-weight:800;font-size:.9rem;margin:.3rem 0">Total: {{fmt(n(compraForm.cantidad)*n(compraForm.costo))}}</div>
+          <button class="btn pri" @click="guardarCompra()"><icon name="bag" :size="16" color="#fff"></icon> {{compraForm.editId?'Actualizar':'Registrar Compra'}}</button>
+          <button class="btn ghost" @click="resetCompra()">Cancelar</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Historial de Compras</div>
+        <div v-if="comprasOrdenadas.length===0" class="empty">Sin compras</div>
+        <div v-for="c in comprasOrdenadas" :key="c.id" class="item">
+          <div class="info">
+            <div class="nm"><icon name="bag" :size="14"></icon> {{c.productoNombre}}</div>
+            <div class="det">{{fmtFH(c.fecha)}} · {{fmtCant(c.cantidad)}} {{c.unidad||''}} × {{fmt(c.costo)}}</div>
+          </div>
+          <div class="act-btns">
+            <b class="neg">{{fmt(c.total)}}</b>
+            <template v-if="loteSinVentas(c.id)">
+              <button class="icon-btn" @click="editarCompra(c.id)" aria-label="Editar"><icon name="edit" :size="15" :color="txtColor"></icon></button>
+              <button class="icon-btn bad" @click="eliminarCompra(c.id)" aria-label="Eliminar"><icon name="trash" :size="15" color="#dc2626"></icon></button>
+            </template>
+            <span v-else class="lock" title="Con ventas: no editable"><icon name="lock" :size="15" :color="mutColor"></icon></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRODUCTOS -->
+    <section v-show="sec==='productos'" class="fade-up">
+      <div class="card">
+        <div class="card-title"><icon name="tag" :size="18"></icon> {{prodForm.editId?'Editar':'Agregar'}} Producto</div>
+        <input v-model="prodForm.nombre" type="text" placeholder="Nombre del producto">
+        <input v-model="prodForm.codigo" type="text" placeholder="Código (opcional)">
+        <div class="grid2">
+          <input v-model="prodForm.precio" type="number" inputmode="decimal" step="0.01" placeholder="Precio venta">
+          <input v-model="prodForm.stockMin" type="number" inputmode="decimal" step="0.1" placeholder="Stock mín.">
+        </div>
+        <div class="info-box" style="margin-bottom:.5rem">Define la unidad de medida si vendes por peso/volumen (ej: kg, lb, gr, litro). Si es un paquete o unidad suelta, pon "u" o déjalo vacío.</div>
+        <input v-model="prodForm.unidad" type="text" placeholder="Unidad (kg, lb, gr, u, paq)" list="unidades-list">
+        <datalist id="unidades-list">
+          <option value="u"></option><option value="kg"></option><option value="lb"></option><option value="gr"></option>
+          <option value="litro"></option><option value="m"></option><option value="caja"></option><option value="paq"></option>
+        </datalist>
+        <button class="btn pri" @click="guardarProducto()"><icon name="check" :size="16" color="#fff"></icon> {{prodForm.editId?'Actualizar':'Guardar'}}</button>
+        <button v-if="prodForm.editId" class="btn ghost" @click="resetProd()">Cancelar</button>
+      </div>
+      <div class="card">
+        <div class="card-title"><icon name="tag" :size="18"></icon> Productos</div>
+        <div class="search"><input v-model="busqProd" type="text" placeholder="Buscar..."></div>
+        <div style="text-align:right;margin-bottom:.4rem"><button class="btn ghost" style="width:auto;display:inline-block;padding:.3rem .7rem;font-size:.72rem" @click="mostrarArchivados=!mostrarArchivados">{{mostrarArchivados?'Ocultar archivados':'Ver archivados'}}</button></div>
+        <div v-if="prodsFiltrados.length===0" class="empty">Sin productos</div>
+        <div v-for="p in prodsFiltrados" :key="p.id" class="prod-wrap">
+          <div class="item" :style="p.archivado?'opacity:.5':''" style="cursor:pointer" @click="prodExpandido[p.id]=!prodExpandido[p.id]">
+            <div class="info">
+              <div class="nm">{{p.nombre}} <span v-if="p.codigo" style="color:var(--mut);font-weight:400;font-size:.72rem">({{p.codigo}})</span></div>
+              <div class="stock-line">
+                <span class="badge" :class="badgeStock(p)">{{txtBadge(p)}}</span>
+                <span class="stock-num">Stock: {{fmtCant(stock(p.id))}} {{p.unidad||''}}</span>
+                <span style="color:var(--mut);font-size:.72rem">{{fmt(p.precio)}}</span>
+                <span v-if="lotesDeProducto(p.id).length" class="chev" :class="{open:prodExpandido[p.id]}"><icon name="chevron" :size="14" :color="mutColor"></icon></span>
+              </div>
+            </div>
+            <div class="act-btns" @click.stop>
+              <button class="icon-btn" @click="editarProducto(p.id)" aria-label="Editar"><icon name="edit" :size="15" :color="txtColor"></icon></button>
+              <button v-if="!p.archivado" class="icon-btn bad" @click="archivarProducto(p.id)" aria-label="Archivar"><icon name="trash" :size="15" color="#dc2626"></icon></button>
+              <button v-else class="icon-btn ok" @click="restaurarProducto(p.id)" aria-label="Restaurar"><icon name="refresh" :size="15" color="#16a34a"></icon></button>
+            </div>
+          </div>
+          <div v-if="prodExpandido[p.id]" class="prod-lotes">
+            <div v-if="lotesDeProducto(p.id).length===0" class="empty" style="padding:.6rem;font-size:.78rem">Sin lotes activos (stock 0)</div>
+            <div v-for="l in lotesDeProducto(p.id)" :key="l.id" class="inv-lote">
+              <span>{{fmtFH(l.fecha)}} · Quedan {{fmtCant(n(l.cantidadInicial)-n(l.cantidadVendida))}}/{{fmtCant(l.cantidadInicial)}} {{p.unidad||''}}</span>
+              <span>@{{fmt(l.costo)}} = <b>{{fmt((n(l.cantidadInicial)-n(l.cantidadVendida))*l.costo)}}</b></span>
+            </div>
+            <div v-if="lotesDeProducto(p.id).length" class="det" style="font-size:.7rem;color:var(--mut);margin-top:.3rem;text-align:right">
+              Valor total: <b class="pos">{{fmt(valorLotesProducto(p.id))}}</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INVENTARIO -->
+    <section v-show="sec==='inventario'" class="fade-up">
+      <div class="balance verde">
+        <div class="lbl"><icon name="package" :size="14" color="#fff"></icon> Valor del Inventario</div>
+        <div class="val">{{fmt(valorInventario)}}</div>
+        <div class="sub">{{fmtCant(unidadesTotal, true)}} unidades · {{lotesActivos.length}} lotes</div>
+      </div>
+      <div class="card">
+        <div class="card-title"><icon name="alert" :size="18" color="#d97706"></icon> Merma / Ajuste</div>
+        <select v-model="ajusteForm.productoId">
+          <option value="">Seleccionar producto...</option>
+          <option v-for="p in prodsActivos" :key="p.id" :value="p.id">{{p.nombre}} (Stock: {{fmtCant(stock(p.id))}} {{p.unidad||''}})</option>
+        </select>
+        <div class="grid2">
+          <input v-model="ajusteForm.cantidad" type="number" inputmode="decimal" step="0.001" placeholder="- merma / + sobrante">
+          <select v-model="ajusteForm.motivo">
+            <option value="">Motivo...</option>
+            <option value="merma">Merma / Daño</option><option value="vencimiento">Vencimiento</option>
+            <option value="robo">Robo / Pérdida</option><option value="error">Error de registro</option>
+            <option value="sobrante">Sobrante en conteo</option>
+          </select>
+        </div>
+        <input v-if="n(ajusteForm.cantidad)>0" v-model="ajusteForm.costoSobrante" type="number" inputmode="decimal" step="0.01" placeholder="Costo unit. del sobrante">
+        <button class="btn warn" @click="registrarAjuste()"><icon name="package" :size="16" color="#fff"></icon> Registrar Ajuste</button>
+      </div>
+      <div class="card" style="padding:.6rem">
+        <div class="card-title" style="padding:.4rem .4rem 0"><icon name="package" :size="18"></icon> Inventario por producto</div>
+        <div v-if="inventarioGrupos.length===0" class="empty">Sin inventario</div>
+        <div v-for="g in inventarioGrupos" :key="g.productoId" class="inv-group">
+          <div class="inv-head" @click="invExpandido[g.productoId]=!invExpandido[g.productoId]">
+            <div style="min-width:0"><div class="nm">{{g.nombre}}</div><div class="det">Stock {{fmtCant(g.stockTotal)}} {{g.unidad||''}}</div></div>
+            <div style="display:flex;align-items:center;gap:.4rem;flex-shrink:0"><b class="pos">{{fmt(g.valorTotal)}}</b><icon name="chevron" :size="16" :color="mutColor"></icon></div>
+          </div>
+          <div v-if="invExpandido[g.productoId]" class="inv-lotes">
+            <div v-for="l in g.lotes" :key="l.id" class="inv-lote">
+              <span>{{fmtFH(l.fecha)}} · {{fmtCant(n(l.cantidadInicial)-n(l.cantidadVendida))}}/{{fmtCant(l.cantidadInicial)}} {{g.unidad||''}}</span>
+              <span>@{{fmt(l.costo)}} = <b>{{fmt((n(l.cantidadInicial)-n(l.cantidadVendida))*l.costo)}}</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Últimos ajustes</div>
+        <div v-if="ajustesRecientes.length===0" class="empty">Sin ajustes</div>
+        <div v-for="a in ajustesRecientes" :key="a.id" class="item">
+          <div class="info"><div class="nm">{{a.productoNombre}}</div><div class="det">{{fmtFH(a.fecha)}} · {{a.motivo}}</div></div>
+          <div style="text-align:right;flex-shrink:0"><div :class="a.cantidad<0?'neg':'pos'" style="font-weight:800">{{a.cantidad>0?'+':''}}{{fmtCant(a.cantidad)}}</div><div v-if="a.costoPerdida" class="det neg">-{{fmt(a.costoPerdida)}}</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CAJA -->
+    <section v-show="sec==='caja'" class="fade-up">
+      <div class="balance" :class="saldoCaja<0?'neg':'azul'">
+        <div class="lbl"><icon name="wallet" :size="14" color="#fff"></icon> Saldo en Caja</div>
+        <div class="val">{{fmt(saldoCaja)}}</div>
+        <div class="sub" v-if="saldoCaja<0">Caja en negativo</div>
+      </div>
+      <div class="info-box">El saldo de caja es <b>acumulativo</b> (incluye todo el historial). El cierre de período solo reinicia los contadores de ventas, compras y ganancia del dashboard.</div>
+      <div class="card">
+        <div class="card-title">Desglose</div>
+        <div class="row"><span>Capital inicial</span><span class="pos">+{{fmt(cfg.capitalInicial||0)}}</span></div>
+        <div class="row"><span>Aportes</span><span class="pos">+{{fmt(aportesTotal)}}</span></div>
+        <div class="row"><span>Ventas contado</span><span class="pos">+{{fmt(ventasContadoTotal)}}</span></div>
+        <div class="row"><span>Compras</span><span class="neg">-{{fmt(comprasTotal)}}</span></div>
+        <div class="row"><span>Retiros</span><span class="neg">-{{fmt(retirosTotal)}}</span></div>
+        <div class="row"><span>Ajustes arqueo</span><span :class="arqueoNeto>=0?'pos':'neg'">{{arqueoNeto>=0?'+':''}}{{fmt(arqueoNeto)}}</span></div>
+        <div class="row total"><span>= SALDO</span><span style="color:var(--pri)">{{fmt(saldoCaja)}}</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title"><icon name="search" :size="18"></icon> Arqueo de Caja</div>
+        <div class="info-box">Cuenta el dinero físico y escribe lo que tienes. Si es MENOR que el sistema = faltante; si es MAYOR = sobrante.</div>
+        <div class="row" style="border:none;padding:.2rem 0"><span>El sistema dice:</span><b style="color:var(--pri)">{{fmt(saldoCaja)}}</b></div>
+        <input v-model="arqueoForm.monto" type="number" inputmode="decimal" step="0.01" placeholder="Monto que contaste físicamente">
+        <div v-if="arqueoPreview" class="arqueo-prev" :class="arqueoPreview.tipo">
+          Tú cuentas: {{fmt(arqueoPreview.fisico)}} · Diferencia:
+          <span v-if="arqueoPreview.tipo==='cuadre'">Cuadre perfecto ✓</span>
+          <span v-else-if="arqueoPreview.tipo==='sobrante'">SOBRANTE +{{fmt(arqueoPreview.diff)}}</span>
+          <span v-else>FALTANTE -{{fmt(arqueoPreview.diff)}}</span>
+        </div>
+        <input v-model="arqueoForm.nota" type="text" placeholder="Nota (opcional)">
+        <button class="btn pri" @click="registrarArqueo()"><icon name="check" :size="16" color="#fff"></icon> Registrar Arqueo</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Movimientos recientes</div>
+        <div v-if="movimientosCaja.length===0" class="empty">Sin movimientos</div>
+        <div v-for="m in movimientosCaja" :key="m.id" class="item">
+          <div class="info"><div class="nm">{{m.concepto}}</div><div class="det">{{fmtFH(m.fecha)}}</div></div>
+          <b :class="m.tipo==='ingreso'?'pos':'neg'" style="flex-shrink:0">{{m.tipo==='ingreso'?'+':'-'}}{{fmt(m.monto)}}</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- PATRIMONIO -->
+    <section v-show="sec==='patrimonio'" class="fade-up">
+      <div class="balance morado">
+        <div class="lbl"><icon name="diamond" :size="14" color="#fff"></icon> Patrimonio Total</div>
+        <div class="val">{{fmt(patrimonioTotal)}}</div>
+        <div class="sub">Capital {{fmt(capitalTotal)}} · Gan. acum. {{fmt(gananciasAcumuladas)}}</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Resumen contable</div>
+        <div class="row"><span>Capital inicial</span><span>{{fmt(cfg.capitalInicial||0)}}</span></div>
+        <div class="row"><span>Aportes</span><span class="pos">+{{fmt(aportesTotal)}}</span></div>
+        <div class="row total" style="border-top-width:1px"><span>= CAPITAL</span><span style="color:var(--pri)">{{fmt(capitalTotal)}}</span></div>
+        <div class="row"><span>Caja</span><span>{{fmt(saldoCaja)}}</span></div>
+        <div class="row"><span>Inventario</span><span>{{fmt(valorInventario)}}</span></div>
+        <div class="row total" style="border-top-width:1px"><span>= ACTIVOS</span><span style="color:var(--pri)">{{fmt(saldoCaja+valorInventario)}}</span></div>
+        <div class="row"><span>Ganancia bruta</span><span class="pos">{{fmt(gananciaBrutaPeriodo)}}</span></div>
+        <div class="row"><span>Gastos operativos</span><span class="neg">-{{fmt(gastosOpPeriodo)}}</span></div>
+        <div class="row"><span>= Ganancia neta (período)</span><span>{{fmt(gananciaNetaPeriodo)}}</span></div>
+        <div class="row hl"><span>DISPONIBLE PARA RETIRO</span><span class="pos" style="font-size:1.1rem">{{fmt(gananciaDisponible)}}</span></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Retirar Ganancia</div>
+        <input v-model="retiroForm.monto" type="number" inputmode="decimal" step="0.01" placeholder="Monto">
+        <input v-model="retiroForm.concepto" type="text" placeholder="Concepto">
+        <button class="btn warn" @click="registrarRetiro()"><icon name="dollar" :size="16" color="#fff"></icon> Retirar Ganancia</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Aportar Capital</div>
+        <input v-model="aporteForm.monto" type="number" inputmode="decimal" step="0.01" placeholder="Monto">
+        <input v-model="aporteForm.nota" type="text" placeholder="Nota">
+        <button class="btn ok" @click="registrarAporte()"><icon name="plus" :size="16" color="#fff"></icon> Registrar Aporte</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Capital Inicial</div>
+        <div class="det" style="font-size:.75rem;color:var(--mut);margin-bottom:.4rem">Actual: {{fmt(cfg.capitalInicial||0)}}</div>
+        <input v-model="capInicialStr" type="number" inputmode="decimal" step="0.01" placeholder="Monto de capital inicial">
+        <button class="btn pri" @click="guardarCapInicial()"><icon name="check" :size="16" color="#fff"></icon> Guardar Capital Inicial</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Historial</div>
+        <div v-if="patrimonioMovs.length===0" class="empty">Sin movimientos</div>
+        <div v-for="m in patrimonioMovs" :key="m.id" class="item">
+          <div class="info"><div class="nm">{{m.tipo}}</div><div class="det">{{fmtFH(m.fecha)}} {{m.nota?'· '+m.nota:''}}</div></div>
+          <b :class="m.tipo==='Retiro'?'neg':'pos'" style="flex-shrink:0">{{m.tipo==='Retiro'?'-':'+'}}{{fmt(m.monto)}}</b>
+        </div>
+      </div>
+    </section>
+
+    <!-- REPORTES -->
+    <section v-show="sec==='reportes'" class="fade-up">
+      <div class="card">
+        <div class="card-title" style="color:var(--warn)"><icon name="lock" :size="18" color="#d97706"></icon> Cerrar Período</div>
+        <div class="info-box">Al cerrar, los contadores del inicio se reinician. El historial se conserva y la ganancia se acumula.</div>
+        <div class="det" style="font-size:.78rem;margin-bottom:.4rem">Período actual: desde {{fmtFecha(cfg.periodoInicio)}}</div>
+        <div class="det" style="font-size:.78rem;margin-bottom:.6rem">Ventas {{fmt(ventasPeriodo)}} · Compras {{fmt(comprasPeriodo)}} · Ganancia {{fmt(gananciaNetaPeriodo)}}</div>
+        <button class="btn warn" @click="cerrarPeriodo()"><icon name="lock" :size="16" color="#fff"></icon> Cerrar Período y Empezar Nuevo</button>
+      </div>
+      <div class="card">
+        <div class="card-title">Historial de Cierres</div>
+        <div v-if="cierresOrdenados.length===0" class="empty">Sin cierres</div>
+        <div v-for="c in cierresOrdenados" :key="c.id" class="item">
+          <div class="info"><div class="nm">{{c.periodo}}</div><div class="det">Cerrado {{fmtFecha(c.fechaCierre)}} · Vtas {{fmt(c.totalVentas)}} · Gan {{fmt(c.ganancia)}}</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title"><icon name="calendar" :size="18"></icon> Reporte por Período</div>
+        <div class="grid2">
+          <input v-model="rep.fechaInicio" type="date">
+          <input v-model="rep.fechaFin" type="date">
+        </div>
+        <button class="btn pri" @click="generarReporte()"><icon name="chart" :size="16" color="#fff"></icon> Generar Reporte</button>
+        <div v-if="rep.resultado" style="margin-top:.6rem">
+          <div class="row"><span>Ingresos</span><span class="pos">{{fmt(rep.resultado.ingresos)}}</span></div>
+          <div class="row"><span>Costos (COGS)</span><span class="neg">-{{fmt(rep.resultado.cogs)}}</span></div>
+          <div class="row"><span>Ganancia bruta</span><span class="pos">{{fmt(rep.resultado.bruta)}} ({{rep.resultado.margenB}}%)</span></div>
+          <div class="row"><span>Mermas</span><span class="neg">-{{fmt(rep.resultado.mermas)}}</span></div>
+          <div class="row total"><span>Ganancia neta</span><span style="color:var(--pri)">{{fmt(rep.resultado.neta)}} ({{rep.resultado.margenN}}%)</span></div>
+          <div class="det" style="font-size:.75rem;color:var(--mut);margin-top:.3rem">Ventas realizadas: {{rep.resultado.numVentas}}</div>
+          <div class="grid2" style="margin-top:.6rem">
+            <button class="btn pri" @click="exportarCSV()"><icon name="download" :size="14" color="#fff"></icon> CSV</button>
+            <button class="btn ok" @click="compartirReporte()"><icon name="upload" :size="14" color="#fff"></icon> Compartir</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav no-print">
+    <button :class="{activo:sec==='dashboard'}" @click="ir('dashboard')"><icon name="home" :size="22" :color="navColor(sec==='dashboard')"></icon><span>Inicio</span></button>
+    <button :class="{activo:sec==='ventas'}" @click="ir('ventas')"><icon name="cart" :size="22" :color="navColor(sec==='ventas')"></icon><span>Ventas</span></button>
+    <button :class="{activo:sec==='compras'}" @click="ir('compras')"><icon name="bag" :size="22" :color="navColor(sec==='compras')"></icon><span>Compras</span></button>
+    <button :class="{activo:sec==='caja'}" @click="ir('caja')"><icon name="wallet" :size="22" :color="navColor(sec==='caja')"></icon><span>Caja</span></button>
+    <button :class="{activo:masAbierto}" @click="masAbierto=true"><icon name="grid" :size="22" :color="navColor(masAbierto)"></icon><span>Más</span></button>
+  </nav>
+
+  <div v-if="masAbierto" class="overlay no-print" @click="masAbierto=false"></div>
+  <div v-if="masAbierto" class="sheet no-print">
+    <div class="handle"></div>
+    <div class="sheet-grid">
+      <button class="sheet-btn" @click="ir('productos')"><icon name="tag" :size="22"></icon>Productos</button>
+      <button class="sheet-btn" @click="ir('inventario')"><icon name="package" :size="22"></icon>Inventario</button>
+      <button class="sheet-btn" @click="ir('patrimonio')"><icon name="diamond" :size="22"></icon>Patrimonio</button>
+      <button class="sheet-btn" @click="ir('reportes')"><icon name="calendar" :size="22"></icon>Reportes</button>
+    </div>
+  </div>
+
+  <div v-if="ajustesAbierto" class="modal no-print" @click.self="ajustesAbierto=false">
+    <div class="modal-box">
+      <div class="modal-title"><icon name="settings" :size="20"></icon> Ajustes</div>
+      <div class="set-group">Apariencia</div>
+      <div class="set-row"><span class="lbl"><icon :name="cfg.tema==='dark'?'sun':'moon'" :size="16" :color="mutColor"></icon> Modo oscuro</span>
+        <label class="switch"><input type="checkbox" :checked="cfg.tema==='dark'" @change="toggleTema()"><span class="slider"></span></label></div>
+      <div class="set-group">Tienda</div>
+      <input v-model="cfg.nombre" type="text" placeholder="Nombre de la tienda" @change="guardarCfg()">
+      <input v-model="cfg.moneda" type="text" placeholder="Símbolo de moneda" @change="guardarCfg()">
+      <div class="set-group">Seguridad</div>
+      <div class="set-row"><span class="lbl"><icon name="shield" :size="16" :color="mutColor"></icon> PIN operaciones sensibles</span>
+        <label class="switch"><input type="checkbox" v-model="cfg.pinActivo" @change="guardarCfg()"><span class="slider"></span></label></div>
+      <input v-if="cfg.pinActivo" v-model="cfg.pin" type="password" inputmode="numeric" placeholder="PIN de 4 dígitos" maxlength="6" @change="guardarCfg()">
+      <div class="set-group">Datos</div>
+      <button class="btn pri" @click="exportar()"><icon name="download" :size="16" color="#fff"></icon> Exportar respaldo</button>
+      <button class="btn bad" @click="triggerImport()"><icon name="upload" :size="16" color="#fff"></icon> Importar datos</button>
+      <input id="impFile" type="file" accept=".json" style="display:none" @change="onImportFile">
+      <div v-if="ultimoBackup" class="det" style="font-size:.72rem;color:var(--mut);margin-top:.3rem">Último backup auto: {{fmtFH(ultimoBackup.fecha)}}</div>
+      <button v-if="ultimoBackup" class="link-btn" @click="restaurarBackupAuto()">Restaurar backup automático</button>
+      <div class="set-group">Información</div>
+      <div class="det" style="font-size:.75rem;color:var(--mut)">Versión 5.2 · Datos locales<br>{{productos.length}} productos · {{ventas.length}} ventas · {{compras.length}} compras</div>
+      <button class="btn ghost" style="margin-top:.8rem" @click="ajustesAbierto=false">Cerrar</button>
+    </div>
+  </div>
+
+  <!-- MODAL DE COBRO POS -->
+  <div v-if="cobroModal.activo" class="modal no-print">
+    <div class="modal-box">
+      <div class="modal-title"><icon name="wallet" :size="20"></icon> Cobrar Venta</div>
+      <div class="cobro-modal">Total a Pagar: {{fmt(cobroModal.total)}}</div>
+      <input v-model="cobroModal.recibido" type="number" inputmode="decimal" step="0.01" placeholder="Efectivo recibido (opcional)" @input="calcVuelto">
+      <button class="btn ghost" style="margin-bottom:.5rem" @click="cobroModal.recibido=cobroModal.total.toFixed(2); calcVuelto()">Pagar Exacto</button>
+      <div v-if="cobroModal.recibido && cobroModal.vuelto >= 0" class="cobro-vuelto">
+        Vuelto: {{fmt(cobroModal.vuelto)}}
+      </div>
+      <button class="btn ok" @click="procesarVenta()" :disabled="procesandoVenta"><icon name="check" :size="16" color="#fff"></icon> Confirmar Pago</button>
+      <button class="btn ghost" @click="cobroModal.activo=false">Cancelar</button>
+    </div>
+  </div>
+
+  <div v-if="confirm.activo" class="modal no-print">
+    <div class="modal-box">
+      <div class="modal-title">{{confirm.titulo}}</div>
+      <p style="font-size:.88rem;margin-bottom:1rem">{{confirm.msg}}</p>
+      <button class="btn bad" @click="okConfirm()"><icon name="check" :size="16" color="#fff"></icon> Confirmar</button>
+      <button class="btn ghost" @click="confirm.activo=false">Cancelar</button>
+    </div>
+  </div>
+
+  <div v-if="prompt.activo" class="modal no-print">
+    <div class="modal-box">
+      <div class="modal-title">{{prompt.titulo}}</div>
+      <p v-if="prompt.msg" style="font-size:.82rem;color:var(--mut);margin-bottom:.6rem;white-space:pre-line">{{prompt.msg}}</p>
+      <input v-model="prompt.value" :type="prompt.type" :inputmode="prompt.type==='password'?'numeric':'text'" :placeholder="prompt.placeholder" @keyup.enter="okPrompt()">
+      <button class="btn pri" @click="okPrompt()"><icon name="check" :size="16" color="#fff"></icon> Aceptar</button>
+      <button class="btn ghost" @click="cancelPrompt()">Cancelar</button>
+    </div>
+  </div>
+
+  <div class="toast no-print" :class="[toast.show?'show':'',toast.type]" role="status">
+    <span>{{toast.msg}}</span>
+    <button v-if="toast.accionTxt" @click="toast.accionFn&&toast.accionFn()">{{toast.accionTxt}}</button>
+  </div>
+</div>
+
+<!-- Librerías Externas -->
+<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js"></script>
+<script src="https://unpkg.com/dexie@4/dist/dexie.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+
+<script>
+/* ================================================================
+   MOTOR MATEMÁTICO NATIVO BLINDADO
+   ================================================================ */
+const n = v => {
+  if (v === null || v === undefined || v === '') return 0;
+  if (typeof v === 'string') v = parseFloat(v.replace(',', '.'));
+  const num = Number(v);
+  return isNaN(num) ? 0 : num;
+};
+const m = v => Math.round(n(v) * 100) / 100;
+const q = v => Math.round(n(v) * 1000) / 1000;
+
+const PATHS = {
+  home:'<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>',
+  cart:'<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+  bag:'<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  package:'<path d="M16.5 9.4l-9-5.19"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+  tag:'<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>',
+  dollar:'<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>',
+  wallet:'<path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>',
+  chart:'<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>',
+  trend:'<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+  calendar:'<rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>',
+  settings:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>',
+  moon:'<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>',
+  sun:'<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>',
+  search:'<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>',
+  plus:'<line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>',
+  x:'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+  edit:'<path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>',
+  trash:'<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>',
+  lock:'<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>',
+  download:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>',
+  upload:'<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>',
+  refresh:'<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>',
+  grid:'<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+  alert:'<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+  check:'<polyline points="20 6 9 17 4 12"/>',
+  chevron:'<polyline points="6 9 12 15 18 9"/>',
+  shield:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  diamond:'<path d="M6 3h12l4 6-10 13L2 9z"/><path d="M11 3 8 9l4 13 4-13-3-6"/><path d="M2 9h20"/>',
+  store:'<path d="M2 7l1.5-4h17L22 7"/><path d="M4 7v13a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V7"/><path d="M2 7h20"/><path d="M9 21v-6h6v6"/>'
+};
+
+const db = new Dexie('TiendaProDB');
+db.version(1).stores({
+  productos:'id,nombre,codigo,archivado', lotes:'id,productoId,fecha,costo,compraId',
+  ventas:'id,fecha,anulada', compras:'id,fecha,productoId,anulada', ajustes:'id,fecha,productoId',
+  arqueos:'id,fecha', movCaja:'id,fecha,tipo', cierres:'id,fechaCierre', capital:'id,fecha', retiros:'id,fecha', config:'key'
+});
+
+function genId(p='') { try { return p+crypto.randomUUID(); } catch(e) { return p+Date.now().toString(36)+Math.random().toString(36).slice(2,10); } }
+function vib(ms) { try { navigator.vibrate && navigator.vibrate(ms); } catch(e) {} }
+function clean(x) { return JSON.parse(JSON.stringify(x)); }
+function P(store, obj) { return store.put(clean(obj)); }
+
+const { h } = Vue;
+const app = Vue.createApp({
+  data() {
+    return {
+      sec: 'dashboard', masAbierto: false, ajustesAbierto: false, online: navigator.onLine, hayUpdate: false,
+      cargando: true, procesandoVenta: false,
+      productos: [], lotes: [], ventas: [], compras: [], ajustes: [], arqueos: [], movCaja: [], cierres: [], capital: [], retiros: [],
+      cfg: { tema:'light', moneda:'$', nombre:'Tienda Pro', pinActivo:false, pin:'', periodoInicio:new Date().toISOString(), capitalInicial:0, ultimoExport:null },
+      // Inicializa el carrito desde localStorage para prevenir pérdida de datos si se cierra la app
+      carrito: JSON.parse(localStorage.getItem('carritoPro') || '[]'), 
+      busqVenta:'', busqCompra:'', busqHist:'', busqProd:'', mostrarArchivados:false, focusVenta:false, focusCompra:false,
+      prodForm: { editId:'', nombre:'', codigo:'', precio:'', stockMin:'5', unidad:'' },
+      compraForm: { editId:'', productoId:'', nombre:'', cantidad:'', costo:'', unidad:'' },
+      ajusteForm: { productoId:'', cantidad:'', motivo:'', costoSobrante:'' },
+      arqueoForm: { monto:'', nota:'' }, retiroForm: { monto:'', concepto:'' }, aporteForm: { monto:'', nota:'' }, capInicialStr:'',
+      rep: { fechaInicio:'', fechaFin:'', resultado:null }, invExpandido:{}, prodExpandido:{},
+      cobroModal: { activo:false, total:0, recibido:'', vuelto:0 },
+      confirm: { activo:false, titulo:'', msg:'', onOk:null },
+      prompt: { activo:false, titulo:'', msg:'', placeholder:'', type:'text', value:'', onOk:null },
+      toast: { show:false, msg:'', type:'ok', accionTxt:'', accionFn:null, timer:null },
+      importFile: null, ultimoBackup: null, _chart: null, _swWaiting: null, _aplicando: false
+    };
+  },
+  computed: {
+    mutColor() { return this.cfg.tema === 'dark' ? '#94a3b8' : '#6b7280'; },
+    txtColor() { return this.cfg.tema === 'dark' ? '#f1f5f9' : '#111827'; },
+    prodsActivos() { return this.productos.filter(p => !p.archivado); },
+    stockMap() {
+      const map = {};
+      this.lotes.forEach(l => { const d = Math.max(0, n(l.cantidadInicial) - n(l.cantidadVendida)); map[l.productoId] = (map[l.productoId] || 0) + d; });
+      return map;
+    },
+    prodsFiltrados() {
+      let p = this.mostrarArchivados ? this.productos : this.prodsActivos;
+      const q = this.busqProd.toLowerCase().trim();
+      if (!q) return p;
+      return p.filter(x => x.nombre.toLowerCase().includes(q) || (x.codigo || '').toLowerCase().includes(q));
+    },
+    listaVenta() {
+      const q = this.busqVenta.toLowerCase().trim();
+      const base = q ? this.prodsActivos.filter(p => p.nombre.toLowerCase().includes(q) || (p.codigo || '').toLowerCase().includes(q)) : this.prodsActivos;
+      return base.filter(p => this.stock(p.id) > 0).slice(0, 12);
+    },
+    listaCompra() {
+      const q = this.busqCompra.toLowerCase().trim();
+      const base = q ? this.prodsActivos.filter(p => p.nombre.toLowerCase().includes(q) || (p.codigo || '').toLowerCase().includes(q)) : this.prodsActivos;
+      return base.slice(0, 12);
+    },
+    ventasFiltradas() {
+      let v = this.ventas.slice().sort((a, b) => { if (a.anulada !== b.anulada) return a.anulada ? 1 : -1; return new Date(b.fecha) - new Date(a.fecha); });
+      const q = this.busqHist.toLowerCase().trim();
+      if (q) v = v.filter(x => x.items.some(i => i.nombre.toLowerCase().includes(q)));
+      return v.slice(0, 100);
+    },
+    comprasOrdenadas() { return this.compras.filter(c => !c.anulada).sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, 100); },
+    totalCarrito() { 
+      return m(this.carrito.reduce((s, it) => s + (n(it.precio) * n(it.cant)), 0)); 
+    },
+    gananciaCarrito() {
+      return m(this.carrito.reduce((s, it) => {
+        const f = this.calcFIFO(it.productoId, n(it.cant));
+        if (f.error) return s;
+        return s + ((n(it.precio) * n(it.cant)) - f.costoTotal);
+      }, 0));
+    },
+    ventasPeriodoArr() { const i = new Date(this.cfg.periodoInicio); return this.ventas.filter(v => !v.anulada && new Date(v.fecha) >= i); },
+    comprasPeriodoArr() { const i = new Date(this.cfg.periodoInicio); return this.compras.filter(c => !c.anulada && new Date(c.fecha) >= i); },
+    ventasPeriodo() { return m(this.ventasPeriodoArr.reduce((s, v) => s + n(v.total), 0)); },
+    comprasPeriodo() { return m(this.comprasPeriodoArr.reduce((s, c) => s + n(c.total), 0)); },
+    gananciaBrutaPeriodo() { return m(this.ventasPeriodoArr.reduce((s, v) => s + n(v.ganancia), 0)); },
+    gastosOpPeriodo() { const i = new Date(this.cfg.periodoInicio); return m(this.ajustes.filter(a => a.cantidad < 0 && new Date(a.fecha) >= i).reduce((s, a) => s + n(a.costoPerdida), 0)); },
+    gananciaNetaPeriodo() { return m(this.gananciaBrutaPeriodo - this.gastosOpPeriodo); },
+    margenPeriodo() { return this.ventasPeriodo > 0 ? ((this.gananciaNetaPeriodo / this.ventasPeriodo) * 100).toFixed(1) : '0.0'; },
+    aportesTotal() { return m(this.capital.reduce((s, c) => s + n(c.monto), 0)); },
+    capitalTotal() { return m(n(this.cfg.capitalInicial) + this.aportesTotal); },
+    ventasContadoTotal() { return m(this.ventas.filter(v => !v.anulada).reduce((s, v) => s + n(v.total), 0)); },
+    comprasTotal() { return m(this.compras.filter(c => !c.anulada).reduce((s, c) => s + n(c.total), 0)); },
+    retirosTotal() { return m(this.retiros.reduce((s, r) => s + n(r.monto), 0)); },
+    arqueoNeto() { return m(this.movCaja.filter(mv => mv.concepto && mv.concepto.toLowerCase().includes('arqueo')).reduce((s, mv) => mv.tipo === 'ingreso' ? s + n(mv.monto) : s - n(mv.monto), 0)); },
+    saldoCaja() { return m(n(this.cfg.capitalInicial) + this.aportesTotal + this.ventasContadoTotal - this.comprasTotal - this.retirosTotal + this.arqueoNeto); },
+    gananciasAcumuladas() { const c = this.cierres.reduce((s, x) => s + n(x.ganancia), 0); return m(c + this.gananciaNetaPeriodo - this.retirosTotal); },
+    gananciaDisponible() {
+      const acum = this.gananciasAcumuladas;
+      if (acum <= 0) return 0;
+      const capitalEnCaja = Math.max(0, this.capitalTotal - this.valorInventario);
+      const efectivoLibre = Math.max(0, this.saldoCaja - capitalEnCaja);
+      return Math.max(0, Math.min(acum, efectivoLibre));
+    },
+    patrimonioTotal() { return m(this.capitalTotal + this.gananciasAcumuladas); },
+    lotesActivos() { return this.lotes.filter(l => (n(l.cantidadInicial) - n(l.cantidadVendida)) > 0).sort((a, b) => new Date(a.fecha) - new Date(b.fecha) || (a.id < b.id ? -1 : 1)); },
+    valorInventario() { return m(this.lotesActivos.reduce((s, l) => s + ((n(l.cantidadInicial) - n(l.cantidadVendida)) * n(l.costo)), 0)); },
+    unidadesTotal() { return this.lotesActivos.reduce((s, l) => s + (n(l.cantidadInicial) - n(l.cantidadVendida)), 0); },
+    inventarioGrupos() {
+      const map = {};
+      this.lotesActivos.forEach(l => {
+        if (!map[l.productoId]) map[l.productoId] = { productoId:l.productoId, nombre:l.productoNombre, unidad:l.productoUnidad||'', lotes:[], stockTotal:0, valorTotal:0 };
+        const d = n(l.cantidadInicial) - n(l.cantidadVendida);
+        map[l.productoId].lotes.push(l);
+        map[l.productoId].stockTotal += d;
+        map[l.productoId].valorTotal = m(map[l.productoId].valorTotal + (d * n(l.costo)));
+      });
+      return Object.values(map).sort((a, b) => b.valorTotal - a.valorTotal);
+    },
+    productosBajoStock() { return this.prodsActivos.filter(p => { const s = this.stock(p.id); return s > 0 && s <= n(p.stockMinimo); }); },
+    productosAgotados() { return this.prodsActivos.filter(p => this.stock(p.id) === 0); },
+    ajustesRecientes() { return this.ajustes.slice().sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, 20); },
+    arqueoPreview() {
+      if (this.arqueoForm.monto === '' || this.arqueoForm.monto === null || this.arqueoForm.monto === undefined) return null;
+      const monto = n(this.arqueoForm.monto);
+      const sys = this.saldoCaja;
+      const diff = monto - sys;
+      const tipo = Math.abs(diff) < 0.01 ? 'cuadre' : (diff > 0 ? 'sobrante' : 'faltante');
+      return { fisico:monto, sistema:sys, diff:Math.abs(diff), tipo:tipo };
+    },
+    movimientosCaja() {
+      const arr = [];
+      if (n(this.cfg.capitalInicial) > 0) arr.push({ id:'ci', fecha:this.cfg.periodoInicio, tipo:'ingreso', monto:this.cfg.capitalInicial, concepto:'Capital inicial' });
+      this.capital.forEach(c => arr.push({ id:c.id, fecha:c.fecha, tipo:'ingreso', monto:c.monto, concepto:'Aporte'+(c.nota?' · '+c.nota:'') }));
+      this.ventas.filter(v => !v.anulada).forEach(v => arr.push({ id:v.id, fecha:v.fecha, tipo:'ingreso', monto:v.total, concepto:'Venta' }));
+      this.compras.filter(c => !c.anulada).forEach(c => arr.push({ id:c.id, fecha:c.fecha, tipo:'egreso', monto:c.total, concepto:'Compra · '+c.productoNombre }));
+      this.retiros.forEach(r => arr.push({ id:r.id, fecha:r.fecha, tipo:'egreso', monto:r.monto, concepto:'Retiro · '+r.concepto }));
+      this.movCaja.forEach(x => arr.push({ id:x.id, fecha:x.fecha, tipo:x.tipo, monto:x.monto, concepto:x.concepto }));
+      return arr.sort((a, b) => new Date(b.fecha) - new Date(a.fecha)).slice(0, 30);
+    },
+    patrimonioMovs() {
+      const arr = [];
+      if (n(this.cfg.capitalInicial) > 0) arr.push({ id:'ci', fecha:this.cfg.periodoInicio, tipo:'Capital inicial', monto:this.cfg.capitalInicial, nota:'' });
+      this.capital.forEach(c => arr.push({ id:c.id, fecha:c.fecha, tipo:'Aporte', monto:c.monto, nota:c.nota }));
+      this.retiros.forEach(r => arr.push({ id:r.id, fecha:r.fecha, tipo:'Retiro', monto:r.monto, nota:r.concepto }));
+      return arr.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+    },
+    cierresOrdenados() { return this.cierres.slice().sort((a, b) => new Date(b.fechaCierre) - new Date(a.fechaCierre)).slice(0, 10); },
+    topRentables() {
+      const now = new Date(), mes = now.getMonth(), an = now.getFullYear();
+      const r = {};
+      this.ventas.filter(v => !v.anulada).forEach(v => {
+        const f = new Date(v.fecha);
+        if (f.getMonth() === mes && f.getFullYear() === an) v.items.forEach(it => {
+          if (!r[it.productoId]) r[it.productoId] = { id:it.productoId, nombre:it.nombre, gan:0 };
+          r[it.productoId].gan = m(r[it.productoId].gan + n(it.ganancia));
+        });
+      });
+      return Object.values(r).sort((a, b) => b.gan - a.gan).slice(0, 5);
+    },
+    ultimaActividad() {
+      const v = this.ventas.filter(x => !x.anulada).sort((a, b) => new Date(b.fecha) - new Date(a.fecha))[0];
+      const c = this.cierresOrdenados[0];
+      if (!v && !c) return 'Sin actividad';
+      if (v && (!c || new Date(v.fecha) > new Date(c.fechaCierre))) return 'Venta ' + this.fmt(v.total) + ' el ' + this.fmtFH(v.fecha);
+      return 'Cierre ' + c.periodo;
+    }
+  },
+  methods: {
+    navColor(active) { return active ? '#2196F3' : this.mutColor; },
+    n(v) { return n(v); },
+    fmt(val) { const v = n(val); return (this.cfg.moneda || '$') + v.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 }); },
+    fmtCant(val, forceDecimals=false) { 
+      const v = n(val); 
+      if (Number.isInteger(v) && !forceDecimals) return v.toString(); 
+      return v.toFixed(3).replace(/\.?0+$/, ''); 
+    },
+    fmtFecha(iso) { try { const d = new Date(iso); return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0') + '/' + String(d.getFullYear()).slice(2); } catch (e) { return ''; } },
+    fmtFH(iso) { try { const d = new Date(iso); return this.fmtFecha(iso) + ' ' + String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0'); } catch (e) { return ''; } },
+    stock(pid) { return this.stockMap[pid] || 0; },
+    badgeStock(p) { const s = this.stock(p.id); if (p.archivado) return 'arch'; if (s === 0) return 'out'; if (s <= n(p.stockMinimo)) return 'low'; return 'ok'; },
+    txtBadge(p) { const s = this.stock(p.id); if (p.archivado) return 'ARCHIVADO'; if (s === 0) return 'AGOTADO'; if (s <= n(p.stockMinimo)) return 'BAJO'; return 'OK'; },
+    lotesDeProducto(pid) { return this.lotes.filter(l => l.productoId === pid && (n(l.cantidadInicial) - n(l.cantidadVendida)) > 0).sort((a, b) => new Date(a.fecha) - new Date(b.fecha) || (a.id < b.id ? -1 : 1)); },
+    valorLotesProducto(pid) { return m(this.lotesDeProducto(pid).reduce((s, l) => s + ((n(l.cantidadInicial) - n(l.cantidadVendida)) * n(l.costo)), 0)); },
+    toastMsg(msg, type = 'ok', accionTxt = '', accionFn = null) {
+      clearTimeout(this.toast.timer);
+      this.toast = { show:true, msg:msg, type:type, accionTxt:accionTxt, accionFn:accionFn, timer:null };
+      vib(type === 'ok' ? 20 : 40);
+      this.toast.timer = setTimeout(() => { this.toast.show = false; }, accionTxt ? 5000 : 3000);
+    },
+    toggleTema() {
+      this.cfg.tema = this.cfg.tema === 'dark' ? 'light' : 'dark';
+      try { document.documentElement.setAttribute('data-theme', this.cfg.tema); } catch (e) {}
+      this.guardarCfg();
+      if (this.sec === 'dashboard') this.$nextTick(() => requestAnimationFrame(() => this.renderChart()));
+    },
+    ir(s) {
+      this.masAbierto = false;
+      this.sec = s;
+      try { history.pushState({ sec:s }, '', '#' + s); } catch (e) {}
+    },
+    limitarStock(it) { const max = this.stock(it.productoId); const val = n(it.cant); if (val > max) it.cant = String(max); if (val < 0) it.cant = ''; },
+    calcFIFO(pid, cant) {
+      const lotes = this.lotes.filter(l => l.productoId === pid && (n(l.cantidadInicial) - n(l.cantidadVendida)) > 0).sort((a, b) => new Date(a.fecha) - new Date(b.fecha) || (a.id < b.id ? -1 : 1));
+      let rest = cant, total = 0, usados = [];
+      for (const l of lotes) {
+        if (rest <= 0) break;
+        const disp = n(l.cantidadInicial) - n(l.cantidadVendida);
+        const usar = Math.min(disp, rest);
+        total = m(total + (usar * n(l.costo)));
+        usados.push({ loteId:l.id, cantidad:usar, costo:l.costo });
+        rest -= usar;
+      }
+      if (rest > 0.001) return { error:'Stock insuficiente (faltan ' + rest.toFixed(3) + ')' };
+      return { costoTotal: total, usados:usados };
+    },
+    agregarCarrito(p) {
+      const s = this.stock(p.id);
+      if (s <= 0) return this.toastMsg('Sin stock', 'bad');
+      const ex = this.carrito.find(i => i.productoId === p.id);
+      if (ex) {
+        if (n(ex.cant) < s) ex.cant = String(n(ex.cant) + 1);
+        else return this.toastMsg('Stock máximo', 'warn');
+      } else {
+        this.carrito.push({ productoId:p.id, nombre:p.nombre, precio:String(p.precio), cant:'1', unidad:p.unidad||'' });
+      }
+      this.busqVenta = '';
+      this.focusVenta = false;
+    },
+    agregarPrimero() {
+      if (this.listaVenta.length > 0) {
+        this.agregarCarrito(this.listaVenta[0]);
+      }
+    },
+    cambiarCant(it, dir) {
+      let val = n(it.cant) + dir;
+      if (it.unidad && ['kg','lb','gr','litro','m'].includes(it.unidad)) {
+        val = n(it.cant) + (dir * 0.5);
+      }
+      if (val > this.stock(it.productoId)) {
+        return this.toastMsg('Stock máximo alcanzado', 'warn');
+      }
+      if (val < 0) val = 0;
+      it.cant = String(val);
+    },
+    validarCant(it) {
+      let val = n(it.cant);
+      if (val > this.stock(it.productoId)) {
+        val = this.stock(it.productoId);
+        this.toastMsg('Cantidad ajustada al stock disponible', 'warn');
+      }
+      if (val < 0) val = 0;
+      it.cant = String(val);
+    },
+    validarPrecio(it) {
+      it.precio = String(n(it.precio));
+    },
+    subTotalItem(it) {
+      return m(n(it.precio) * n(it.cant));
+    },
+    iniciarCobro() {
+      const inv = this.carrito.filter(it => n(it.cant) <= 0);
+      if (inv.length) return this.toastMsg('Todas las cantidades deben ser > 0', 'bad');
+      this.cobroModal.total = this.totalCarrito;
+      this.cobroModal.recibido = '';
+      this.cobroModal.vuelto = 0;
+      this.cobroModal.activo = true;
+    },
+    calcVuelto() {
+      const rec = n(this.cobroModal.recibido);
+      if (rec > 0) {
+        this.cobroModal.vuelto = m(rec - this.cobroModal.total);
+      } else {
+        this.cobroModal.vuelto = 0;
+      }
+    },
+    async procesarVenta() {
+      this.procesandoVenta = true;
+      try {
+        const items = []; let tot = 0, gan = 0, todos = [];
+        for (const it of this.carrito) {
+          const c = n(it.cant), pr = n(it.precio);
+          const f = this.calcFIFO(it.productoId, c);
+          if (f.error) throw new Error(f.error + ' en ' + it.nombre);
+          const sub = pr * c;
+          items.push({ productoId:it.productoId, nombre:it.nombre, cantidad:c, unidad:it.unidad||'', precio:pr, costo:f.costoTotal, ganancia:m(sub - f.costoTotal), lotesUsados:f.usados });
+          tot = m(tot + sub);
+          gan = m(gan + (sub - f.costoTotal));
+          todos.push(...f.usados);
+        }
+        const venta = { id:genId('v'), fecha:new Date().toISOString(), items:items, total:tot, ganancia:gan, anulada:false };
+        
+        // OPTIMIZACIÓN: bulkPut en lugar de un bucle de awaits para actualizar lotes instantáneamente
+        await db.transaction('rw', db.ventas, db.lotes, async () => {
+          await P(db.ventas, venta);
+          const lotesActualizados = [];
+          for (const u of todos) {
+            const l = this.lotes.find(x => x.id === u.loteId);
+            if (l) { 
+              l.cantidadVendida = q(n(l.cantidadVendida) + u.cantidad); 
+              lotesActualizados.push(l);
+            }
+          }
+          if (lotesActualizados.length > 0) {
+            await db.lotes.bulkPut(lotesActualizados.map(l => clean(l)));
+          }
+        });
+        
+        await this.recargar(['ventas', 'lotes']);
+        this.carrito = []; // Limpia el carrito en memoria
+        localStorage.removeItem('carritoPro'); // Limpia el carrito del almacenamiento local
+        this.cobroModal.activo = false;
+        this.toastMsg('Venta exitosa: ' + this.fmt(tot));
+      } catch (e) {
+        this.toastMsg(e.message, 'bad');
+      } finally {
+        this.procesandoVenta = false;
+      }
+    },
+    anularVenta(id) {
+      const v = this.ventas.find(x => x.id === id);
+      if (!v) return;
+      this.pedirPin(() => {
+        this.confirm = { activo:true, titulo:'Anular venta', msg:'¿Anular venta por ' + this.fmt(v.total) + '? Se restaura el stock y se descuenta de caja.', onOk:async () => {
+          try {
+            await db.transaction('rw', db.ventas, db.lotes, async () => {
+              await P(db.ventas, Object.assign({}, v, { anulada:true, fechaAnulacion:new Date().toISOString() }));
+              const lotesActualizados = [];
+              for (const it of v.items) {
+                if (!it.lotesUsados) continue;
+                for (const u of it.lotesUsados) {
+                  const l = this.lotes.find(x => x.id === u.loteId);
+                  if (l) { 
+                    l.cantidadVendida = Math.max(0, q(n(l.cantidadVendida) - u.cantidad)); 
+                    lotesActualizados.push(l);
+                  }
+                }
+              }
+              if (lotesActualizados.length > 0) {
+                await db.lotes.bulkPut(lotesActualizados.map(l => clean(l)));
+              }
+            });
+            await this.recargar(['ventas', 'lotes']);
+            this.toastMsg('Venta anulada');
+          } catch (e) { this.toastMsg(e.message, 'bad'); }
+        }};
+      });
+    },
+    selCompra(p) { this.compraForm = { editId:'', productoId:p.id, nombre:p.nombre, cantidad:'', costo:'', unidad:p.unidad||'' }; this.busqCompra = ''; this.focusCompra = false; },
+    resetCompra() { this.compraForm = { editId:'', productoId:'', nombre:'', cantidad:'', costo:'', unidad:'' }; },
+    loteSinVentas(cid) { const l = this.lotes.find(x => x.compraId === cid); return l ? n(l.cantidadVendida) === 0 : true; },
+    editarCompra(id) { const c = this.compras.find(x => x.id === id); if (!c || !this.loteSinVentas(id)) return; this.compraForm = { editId:id, productoId:c.productoId, nombre:c.productoNombre, cantidad:String(c.cantidad), costo:String(c.costo), unidad:c.unidad||'' }; window.scrollTo(0, 0); },
+    eliminarCompra(id) {
+      if (!this.loteSinVentas(id)) return;
+      const c = this.compras.find(x => x.id === id);
+      this.confirm = { activo:true, titulo:'Eliminar compra', msg:'¿Eliminar compra de ' + c.productoNombre + '?', onOk:async () => {
+        const l = this.lotes.find(x => x.compraId === id);
+        await db.transaction('rw', db.compras, db.lotes, async () => {
+          await db.compras.delete(id);
+          if (l) await db.lotes.delete(l.id);
+        });
+        await this.recargar(['compras', 'lotes']);
+        this.toastMsg('Compra eliminada');
+      }};
+    },
+    async guardarCompra() {
+      const f = this.compraForm;
+      const cant = n(f.cantidad), costo = n(f.costo);
+      if (!f.productoId) return this.toastMsg('Selecciona producto', 'bad');
+      if (cant <= 0) return this.toastMsg('Cantidad debe ser > 0', 'bad');
+      if (costo < 0) return this.toastMsg('Costo inválido', 'bad');
+      const total = m(cant * costo);
+      const ejecutar = async () => {
+        try {
+          if (f.editId) {
+            const l = this.lotes.find(x => x.compraId === f.editId);
+            if (l && n(l.cantidadVendida) > 0) return this.toastMsg('Lote con ventas: no editable', 'bad');
+            const c = this.compras.find(x => x.id === f.editId);
+            await db.transaction('rw', db.compras, db.lotes, async () => {
+              await P(db.compras, Object.assign({}, c, { productoId:f.productoId, productoNombre:f.nombre, productoUnidad:f.unidad, cantidad:cant, costo:costo, total:total, unidad:f.unidad }));
+              if (l) await P(db.lotes, Object.assign({}, l, { productoId:f.productoId, productoNombre:f.nombre, productoUnidad:f.unidad, cantidadInicial:cant, costo:costo }));
+            });
+          } else {
+            const compra = { id:genId('c'), fecha:new Date().toISOString(), productoId:f.productoId, productoNombre:f.nombre, productoUnidad:f.unidad, cantidad:cant, costo:costo, total:total, anulada:false, unidad:f.unidad };
+            const lote = { id:genId('l'), compraId:compra.id, productoId:f.productoId, productoNombre:f.nombre, productoUnidad:f.unidad, cantidadInicial:cant, cantidadVendida:0, costo:costo, fecha:compra.fecha };
+            await db.transaction('rw', db.compras, db.lotes, async () => {
+              await P(db.compras, compra);
+              await P(db.lotes, lote);
+            });
+          }
+          await this.recargar(['compras', 'lotes']);
+          this.resetCompra();
+          this.toastMsg('Compra ' + this.fmt(total));
+        } catch (e) { this.toastMsg(e.message, 'bad'); }
+      };
+      if (!f.editId && total > this.saldoCaja) this.confirm = { activo:true, titulo:'Caja insuficiente', msg:'Cuesta ' + this.fmt(total) + ' pero hay ' + this.fmt(this.saldoCaja) + ' en caja. ¿Continuar?', onOk:ejecutar };
+      else ejecutar();
+    },
+    resetProd() { this.prodForm = { editId:'', nombre:'', codigo:'', precio:'', stockMin:'5', unidad:'' }; },
+    async guardarProducto() {
+      const p = this.prodForm;
+      const nombre = (p.nombre || '').trim();
+      const precio = n(p.precio);
+      const min = n(p.stockMin);
+      const unidad = (p.unidad || '').trim();
+      if (!nombre) return this.toastMsg('Nombre obligatorio', 'bad');
+      if (precio <= 0) return this.toastMsg('Precio debe ser > 0', 'bad');
+      const dup = this.productos.find(x => x.nombre.toLowerCase() === nombre.toLowerCase() && x.id !== p.editId && !x.archivado);
+      if (dup) return this.toastMsg('Ya existe ese nombre', 'bad');
+      if (p.editId) {
+        const o = this.productos.find(x => x.id === p.editId);
+        await P(db.productos, Object.assign({}, o, { nombre:nombre, codigo:(p.codigo || '').trim(), precio:precio, stockMinimo:min, unidad:unidad }));
+        this.toastMsg('Producto actualizado');
+      } else {
+        await P(db.productos, { id:genId('p'), nombre:nombre, codigo:(p.codigo || '').trim(), precio:precio, stockMinimo:min, archivado:false, unidad:unidad });
+        this.toastMsg('Producto agregado');
+      }
+      this.resetProd();
+      await this.recargar(['productos']);
+    },
+    editarProducto(id) { const p = this.productos.find(x => x.id === id); if (!p) return; this.prodForm = { editId:id, nombre:p.nombre, codigo:p.codigo || '', precio:String(p.precio), stockMin:String(p.stockMinimo || 5), unidad:p.unidad||'' }; window.scrollTo(0, 0); },
+    archivarProducto(id) {
+      const p = this.productos.find(x => x.id === id);
+      if (this.stock(id) > 0) return this.toastMsg('No archivar con stock > 0', 'bad');
+      this.confirm = { activo:true, titulo:'Archivar producto', msg:'¿Archivar "' + p.nombre + '"?', onOk:async () => {
+        await P(db.productos, Object.assign({}, p, { archivado:true }));
+        await this.recargar(['productos']);
+        this.toastMsg('Archivado');
+      }};
+    },
+    async restaurarProducto(id) {
+      const p = this.productos.find(x => x.id === id);
+      await P(db.productos, Object.assign({}, p, { archivado:false }));
+      await this.recargar(['productos']);
+      this.toastMsg('Restaurado');
+    },
+    async registrarAjuste() {
+      const f = this.ajusteForm;
+      const cant = n(f.cantidad);
+      if (!f.productoId) return this.toastMsg('Selecciona producto', 'bad');
+      if (cant === 0) return this.toastMsg('Cantidad no puede ser 0', 'bad');
+      if (!f.motivo) return this.toastMsg('Selecciona motivo', 'bad');
+      const prod = this.productos.find(p => p.id === f.productoId);
+      if (cant < 0 && Math.abs(cant) > this.stock(f.productoId)) return this.toastMsg('Solo hay ' + this.stock(f.productoId), 'bad');
+      if (cant < 0) {
+        const res = this.calcFIFO(f.productoId, Math.abs(cant));
+        if (res.error) return this.toastMsg(res.error, 'bad');
+        const aj = { id:genId('a'), fecha:new Date().toISOString(), productoId:f.productoId, productoNombre:prod.nombre, cantidad:cant, motivo:f.motivo, costoPerdida:res.costoTotal, lotesUsados:res.usados };
+        await db.transaction('rw', db.ajustes, db.lotes, async () => {
+          await P(db.ajustes, aj);
+          const lotesActualizados = [];
+          for (const u of res.usados) {
+            const l = this.lotes.find(x => x.id === u.loteId);
+            if (l) { 
+              l.cantidadVendida = q(n(l.cantidadVendida) + u.cantidad); 
+              lotesActualizados.push(l);
+            }
+          }
+          if (lotesActualizados.length > 0) await db.lotes.bulkPut(lotesActualizados.map(l => clean(l)));
+        });
+        await this.recargar(['ajustes', 'lotes']);
+        this.toastMsg('Merma registrada · pérdida ' + this.fmt(res.costoPerdida));
+      } else {
+        const cs = n(f.costoSobrante);
+        if (cs < 0) return this.toastMsg('Costo inválido', 'bad');
+        const aj = { id:genId('a'), fecha:new Date().toISOString(), productoId:f.productoId, productoNombre:prod.nombre, cantidad:cant, motivo:f.motivo, costoPerdida:0 };
+        const lote = { id:genId('l'), compraId:'aj-' + aj.id, productoId:f.productoId, productoNombre:prod.nombre, productoUnidad:prod.unidad||'', cantidadInicial:cant, cantidadVendida:0, costo:cs, fecha:aj.fecha };
+        await db.transaction('rw', db.ajustes, db.lotes, async () => {
+          await P(db.ajustes, aj);
+          await P(db.lotes, lote);
+        });
+        await this.recargar(['ajustes', 'lotes']);
+        this.toastMsg('Sobrante registrado');
+      }
+      this.ajusteForm = { productoId:'', cantidad:'', motivo:'', costoSobrante:'' };
+    },
+    async registrarArqueo() {
+      const monto = n(this.arqueoForm.monto);
+      if (monto < 0 || this.arqueoForm.monto === '') return this.toastMsg('Monto inválido', 'bad');
+      const diff = m(monto - this.saldoCaja);
+      const arq = { id:genId('aq'), fecha:new Date().toISOString(), montoFisico:monto, saldoSistema:this.saldoCaja, diferencia:diff, nota:this.arqueoForm.nota };
+      if (Math.abs(diff) > 0.01) {
+        const mov = { id:genId('mc'), fecha:new Date().toISOString(), tipo:diff > 0 ? 'ingreso' : 'egreso', monto:Math.abs(diff), concepto:(diff > 0 ? 'Sobrante' : 'Faltante') + ' de arqueo', nota:this.arqueoForm.nota };
+        await db.transaction('rw', db.arqueos, db.movCaja, async () => {
+          await P(db.arqueos, arq);
+          await P(db.movCaja, mov);
+        });
+        this.toastMsg((diff > 0 ? 'Sobrante ' : 'Faltante ') + this.fmt(Math.abs(diff)), diff > 0 ? 'warn' : 'bad');
+      } else {
+        await P(db.arqueos, arq);
+        this.toastMsg('Cuadre perfecto');
+      }
+      this.arqueoForm = { monto:'', nota:'' };
+      await this.recargar(['arqueos', 'movCaja']);
+    },
+    guardarCapInicial() { const val = n(this.capInicialStr); this.cfg.capitalInicial = val; this.guardarCfg(); this.capInicialStr = ''; this.toastMsg('Capital inicial guardado'); },
+    registrarRetiro() {
+      const monto = n(this.retiroForm.monto);
+      const c = (this.retiroForm.concepto || '').trim();
+      if (monto <= 0) return this.toastMsg('Monto inválido', 'bad');
+      if (!c) return this.toastMsg('Concepto obligatorio', 'bad');
+      if (monto > this.gananciaDisponible + 0.01) return this.toastMsg('Máximo ' + this.fmt(this.gananciaDisponible), 'bad');
+      this.pedirPin(async () => {
+        await P(db.retiros, { id:genId('r'), fecha:new Date().toISOString(), monto:monto, concepto:c });
+        await this.recargar(['retiros']);
+        this.retiroForm = { monto:'', concepto:'' };
+        this.toastMsg('Retiro registrado');
+      });
+    },
+    async registrarAporte() {
+      const monto = n(this.aporteForm.monto);
+      if (monto <= 0) return this.toastMsg('Monto inválido', 'bad');
+      await P(db.capital, { id:genId('k'), fecha:new Date().toISOString(), monto:monto, nota:this.aporteForm.nota || '' });
+      await this.recargar(['capital']);
+      this.aporteForm = { monto:'', nota:'' };
+      this.toastMsg('Aporte registrado');
+    },
+    cerrarPeriodo() {
+      this.pedirPin(() => {
+        this.confirm = { activo:true, titulo:'Cerrar período', msg:'¿Cerrar el período actual? Los contadores del inicio se reinician y la ganancia se acumula. Esta acción no se puede deshacer.', onOk:async () => {
+          const c = { id:genId('z'), periodo:this.fmtFecha(this.cfg.periodoInicio) + ' - ' + this.fmtFecha(new Date().toISOString()), fechaCierre:new Date().toISOString(), totalVentas:this.ventasPeriodo, totalCompras:this.comprasPeriodo, ganancia:this.gananciaNetaPeriodo };
+          this.cfg.periodoInicio = new Date().toISOString();
+          await P(db.cierres, c);
+          await this.guardarCfg();
+          await this.recargar(['cierres']);
+          this.toastMsg('Período cerrado');
+        }};
+      });
+    },
+    generarReporte() {
+      if (!this.rep.fechaInicio || !this.rep.fechaFin) return this.toastMsg('Selecciona fechas', 'bad');
+      const i = new Date(this.rep.fechaInicio), f = new Date(this.rep.fechaFin);
+      f.setHours(23, 59, 59);
+      if (i > f) return this.toastMsg('Fecha inicio > fin', 'bad');
+      const vp = this.ventas.filter(v => !v.anulada && new Date(v.fecha) >= i && new Date(v.fecha) <= f);
+      const ing = m(vp.reduce((s, v) => s + n(v.total), 0));
+      const cogs = m(vp.reduce((s, v) => s + v.items.reduce((ss, it) => ss + n(it.costo), 0), 0));
+      const bruta = m(ing - cogs);
+      const mermas = m(this.ajustes.filter(a => a.cantidad < 0 && new Date(a.fecha) >= i && new Date(a.fecha) <= f).reduce((s, a) => s + n(a.costoPerdida), 0));
+      const neta = m(bruta - mermas);
+      this.rep.resultado = { ingresos:ing, cogs:cogs, bruta:bruta, mermas:mermas, neta:neta, numVentas:vp.length, margenB:ing > 0 ? ((bruta / ing) * 100).toFixed(1) : '0.0', margenN:ing > 0 ? ((neta / ing) * 100).toFixed(1) : '0.0', _vp:vp };
+    },
+    exportarCSV() {
+      const r = this.rep.resultado;
+      if (!r) return;
+      const rows = [['Fecha', 'Productos', 'Total', 'Ganancia']].concat(r._vp.map(v => [this.fmtFH(v.fecha), v.items.map(i => i.nombre + ' x' + i.cantidad + (i.unidad?(' '+i.unidad):'')).join('; '), v.total, v.ganancia]));
+      const csv = '\uFEFF' + rows.map(row => row.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\n');
+      this.descargar(new Blob([csv], { type:'text/csv;charset=utf-8' }), 'reporte-' + this.rep.fechaInicio + '.csv');
+      this.toastMsg('CSV descargado');
+    },
+    async compartirReporte() {
+      const r = this.rep.resultado;
+      if (!r) return;
+      const t = 'Reporte ' + this.rep.fechaInicio + ' al ' + this.rep.fechaFin + '\nIngresos: ' + this.fmt(r.ingresos) + '\nGanancia bruta: ' + this.fmt(r.bruta) + ' (' + r.margenB + '%)\nMermas: ' + this.fmt(r.mermas) + '\nGanancia neta: ' + this.fmt(r.neta) + ' (' + r.margenN + '%)\nVentas: ' + r.numVentas;
+      try {
+        if (navigator.share) await navigator.share({ title:'Reporte', text:t });
+        else { await navigator.clipboard.writeText(t); this.toastMsg('Copiado'); }
+      } catch (e) { this.toastMsg('No se pudo compartir', 'warn'); }
+    },
+    buildData() { return clean({ version:5, fecha:new Date().toISOString(), cfg:this.cfg, productos:this.productos, lotes:this.lotes, ventas:this.ventas, compras:this.compras, ajustes:this.ajustes, arqueos:this.arqueos, movCaja:this.movCaja, cierres:this.cierres, capital:this.capital, retiros:this.retiros }); },
+    exportar() {
+      const d = this.buildData();
+      this.descargar(new Blob([JSON.stringify(d, null, 2)], { type:'application/json' }), 'respaldo-tienda-' + new Date().toISOString().split('T')[0] + '.json');
+      this.cfg.ultimoExport = new Date().toISOString();
+      this.guardarCfg();
+      this.toastMsg('Respaldo descargado');
+    },
+    triggerImport() { const el = document.getElementById('impFile'); if (el) el.click(); },
+    onImportFile(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      this.importFile = file;
+      e.target.value = '';
+      this.confirm = { activo:true, titulo:'Importar datos', msg:'Esto REEMPLAZARÁ todos los datos actuales. ¿Continuar?', onOk:() => this.ejecutarImport() };
+    },
+    ejecutarImport() {
+      const file = this.importFile;
+      if (!file) return;
+      const rd = new FileReader();
+      rd.onload = async (ev) => {
+        try {
+          const d = JSON.parse(ev.target.result);
+          if (!d.productos && !d.ventas) throw new Error('Archivo inválido');
+          await this.importarData(d);
+          this.ajustesAbierto = false;
+          this.toastMsg('Datos importados');
+        } catch (e) { this.toastMsg('Error: ' + e.message, 'bad'); }
+      };
+      rd.readAsText(file);
+    },
+    async importarData(d) {
+      const tables = ['productos', 'lotes', 'ventas', 'compras', 'ajustes', 'arqueos', 'movCaja', 'cierres', 'capital', 'retiros'];
+      await db.transaction('rw', tables.concat(['config']), async () => {
+        for (const t of tables) {
+          await db.table(t).clear();
+          if (Array.isArray(d[t])) await db.table(t).bulkPut(clean(d[t]));
+        }
+        if (d.cfg) await P(db.config, { key:'cfg', value:d.cfg });
+      });
+      if (d.cfg) this.cfg = Object.assign({}, this.cfg, d.cfg);
+      await this.recargarTodo();
+    },
+    async restaurarBackupAuto() {
+      if (!this.ultimoBackup) return;
+      this.confirm = { activo:true, titulo:'Restaurar backup', msg:'¿Reemplazar los datos con el backup automático del ' + this.fmtFH(this.ultimoBackup.fecha) + '?', onOk:async () => {
+        await this.importarData(this.ultimoBackup.value);
+        this.ajustesAbierto = false;
+        this.toastMsg('Backup restaurado');
+      }};
+    },
+    descargar(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click(); URL.revokeObjectURL(a.href); },
+    pedirPin(cb) {
+      if (!this.cfg.pinActivo) { cb(); return; }
+      this.prompt = { activo:true, titulo:'PIN de seguridad', msg:'Ingresa tu PIN', placeholder:'••••', type:'password', value:'', onOk:v => { if (v === this.cfg.pin) cb(); else this.toastMsg('PIN incorrecto', 'bad'); } };
+    },
+    okConfirm() { const cb = this.confirm.onOk; this.confirm.activo = false; if (cb) cb(); },
+    okPrompt() { const cb = this.prompt.onOk; const v = this.prompt.value; this.prompt.activo = false; if (cb) cb(v); },
+    cancelPrompt() { this.prompt.activo = false; },
+    async guardarCfg() { try { await P(db.config, { key:'cfg', value:this.cfg }); } catch (e) { console.error('guardarCfg', e); } },
+    async recargar(what) {
+      const map = { productos:() => db.productos.toArray(), lotes:() => db.lotes.toArray(), ventas:() => db.ventas.toArray(), compras:() => db.compras.toArray(), ajustes:() => db.ajustes.toArray(), arqueos:() => db.arqueos.toArray(), movCaja:() => db.movCaja.toArray(), cierres:() => db.cierres.toArray(), capital:() => db.capital.toArray(), retiros:() => db.retiros.toArray() };
+      for (const w of what) this[w] = await map[w]();
+    },
+    async recargarTodo() {
+      const r = await Promise.all([db.productos.toArray(), db.lotes.toArray(), db.ventas.toArray(), db.compras.toArray(), db.ajustes.toArray(), db.arqueos.toArray(), db.movCaja.toArray(), db.cierres.toArray(), db.capital.toArray(), db.retiros.toArray()]);
+      ['productos', 'lotes', 'ventas', 'compras', 'ajustes', 'arqueos', 'movCaja', 'cierres', 'capital', 'retiros'].forEach((k, i) => this[k] = r[i]);
+    },
+    renderChart() {
+      try {
+        const cv = document.getElementById('chartVentas');
+        if (!cv || typeof Chart === 'undefined') return;
+        if (this._chart) { try { this._chart.destroy(); } catch (e) {} this._chart = null; }
+        const meses = [];
+        const now = new Date();
+        for (let i = 5; i >= 0; i--) {
+          const f = new Date(now.getFullYear(), now.getMonth() - i, 1);
+          meses.push({ m:f.getMonth(), y:f.getFullYear(), label:f.toLocaleDateString('es', { month:'short' }), v:0, g:0 });
+        }
+        this.ventas.filter(x => !x.anulada).forEach(v => {
+          const f = new Date(v.fecha);
+          const me = meses.find(x => x.m === f.getMonth() && x.y === f.getFullYear());
+          if (me) { me.v += n(v.total); me.g += n(v.ganancia); }
+        });
+        const dark = this.cfg.tema === 'dark';
+        const txt = dark ? '#94a3b8' : '#6b7280', grid = dark ? '#334155' : '#e5e7eb';
+        this._chart = new Chart(cv.getContext('2d'), {
+          type: 'bar',
+          data: { labels: meses.map(m => m.label), datasets: [{ label:'Ventas', data:meses.map(m => m.v), backgroundColor:'#2196F3', borderRadius:4 }, { label:'Ganancia', data:meses.map(m => m.g), backgroundColor:'#16a34a', borderRadius:4 }] },
+          options: { responsive:true, maintainAspectRatio:false, animation:{ duration:500 }, plugins:{ legend:{ position:'bottom', labels:{ color:txt, boxWidth:12, font:{ size:10 } } }, tooltip:{ callbacks:{ label:c => ' ' + c.dataset.label + ': ' + this.fmt(c.raw) } } }, scales:{ x:{ ticks:{ color:txt, font:{ size:9 } }, grid:{ display:false } }, y:{ beginAtZero:true, ticks:{ color:txt, font:{ size:9 }, callback:v => '$' + v.toLocaleString() }, grid:{ color:grid } } } }
+        });
+      } catch (e) { console.error('renderChart', e); }
+    },
+    async backupAuto() { try { const data = this.buildData(); await P(db.config, { key:'backupAuto', value:data, fecha:new Date().toISOString() }); } catch (e) {} },
+    aplicarUpdate() { if (this._swWaiting) { this._aplicando = true; try { this._swWaiting.postMessage('SKIP_WAITING'); } catch (e) {} } },
+    async inicializar() {
+      try {
+        const c = await db.config.get('cfg');
+        if (c) this.cfg = Object.assign({}, this.cfg, c.value);
+        else await this.guardarCfg();
+        try { document.documentElement.setAttribute('data-theme', this.cfg.tema); } catch (e) {}
+        this.capInicialStr = String(this.cfg.capitalInicial || '');
+        await this.recargarTodo();
+        const b = await db.config.get('backupAuto');
+        if (b) this.ultimoBackup = b;
+        const ahora = Date.now();
+        if (!this.cfg.ultimoBackupAuto || (ahora - this.cfg.ultimoBackupAuto) > 86400000) {
+          await this.backupAuto();
+          this.cfg.ultimoBackupAuto = ahora;
+          await this.guardarCfg();
+          const b2 = await db.config.get('backupAuto');
+          if (b2) this.ultimoBackup = b2;
+        }
+        const hash = location.hash.slice(1);
+        const valid = ['dashboard', 'ventas', 'compras', 'productos', 'inventario', 'caja', 'patrimonio', 'reportes'];
+        if (valid.includes(hash)) this.sec = hash;
+      } catch (e) {
+        console.error(e);
+        this.toastMsg('Error al cargar datos', 'bad');
+      } finally {
+        this.cargando = false;
+        this.$nextTick(() => { if (this.sec === 'dashboard') requestAnimationFrame(() => this.renderChart()); });
+      }
+    }
+  },
+  watch: {
+    // Previene pérdida de datos: guarda el carrito localmente cada vez que cambia
+    carrito: {
+      handler(val) {
+        try {
+          localStorage.setItem('carritoPro', JSON.stringify(val));
+        } catch (e) {}
+      },
+      deep: true
+    },
+    'cfg.tema'(t) { try { document.documentElement.setAttribute('data-theme', t); } catch (e) {} if (this.sec === 'dashboard') this.$nextTick(() => requestAnimationFrame(() => this.renderChart())); },
+    sec(s) { if (s === 'dashboard') this.$nextTick(() => requestAnimationFrame(() => this.renderChart())); }
+  },
+  mounted() {
+    this.inicializar();
+    window.addEventListener('online', () => this.online = true);
+    window.addEventListener('offline', () => this.online = false);
+    window.addEventListener('popstate', e => { this.sec = (e.state && e.state.sec) || 'dashboard'; });
+    window.addEventListener('resize', () => { if (this.sec === 'dashboard') this.renderChart(); });
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async () => {
+        try {
+          const reg = await navigator.serviceWorker.register('sw.js');
+          const avisar = sw => { if (!sw) return; this._swWaiting = sw; this.hayUpdate = true; };
+          avisar(reg.waiting);
+          reg.addEventListener('updatefound', () => { const nw = reg.installing; if (nw) nw.addEventListener('statechange', () => { if (nw.state === 'installed' && navigator.serviceWorker.controller) avisar(reg.waiting); }); });
+          navigator.serviceWorker.addEventListener('controllerchange', () => { if (this._aplicando) location.reload(); });
+          setInterval(() => reg.update(), 3600000);
+        } catch (e) {}
+      });
+    }
+  }
+});
+
+app.config.errorHandler = (err, instance, info) => {
+  console.error('Vue Error:', err);
+  const appEl = document.getElementById('app');
+  if (appEl) appEl.removeAttribute('v-cloak');
+  if (instance && instance.toastMsg) {
+    instance.toastMsg('Error de renderizado: ' + err.message, 'bad');
+  }
+};
+
+app.component('icon', {
+  props: { name:String, size:{ type:[Number, String], default:22 }, color:{ type:String, default:'#2196F3' } },
+  render() {
+    const s = parseInt(this.size) || 22;
+    return h('svg', {
+      width: s, height: s, viewBox: '0 0 24 24', fill: 'none', stroke: this.color,
+      'stroke-width': 2, 'stroke-linecap': 'round', 'stroke-linejoin': 'round',
+      style: 'flex-shrink:0; vertical-align:middle; display:inline-block;',
+      innerHTML: PATHS[this.name] || ''
+    });
+  }
+});
+
+app.mount('#app');
+</script>
+</body>
 </html>
